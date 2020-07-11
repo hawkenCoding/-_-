@@ -8,6 +8,8 @@ import logging
 import discord
 from discord.ext import commands
 
+from types import ModuleType
+
 # get token as environment variable
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -15,7 +17,17 @@ PREFIX = os.getenv('COMMAND_PREFIX') + ' '
 
 logging.basicConfig(level=logging.INFO)
 
-bot = commands.Bot(
+
+class Bot(commands.Bot):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def add_cog(self, cog: commands.Cog) -> None:
+        super().add_cog(cog)
+        logging.info(f"Added cog: {cog.qualified_name}")
+
+
+bot = Bot(
     PREFIX,
     status=discord.Status.online,
 )
@@ -32,12 +44,13 @@ async def on_ready():
 
 
 if __name__ == '__main__':
-    # cogs
-    cogs = ['cogs.' + file[:-3] for file in list(os.walk('cogs'))[0][2]]
-    logging.info(f"Attempting to add {len(cogs)} cogs:")
-    for cog in cogs:
-        bot.load_extension(cog)
-        logging.info(f"Added cog: {cog}")
+    EXTENSIONS = [
+        'cogs.admin',
+        'cogs.roulette',
+        'cogs.storage',
+    ]
+    logging.info(f"Attempting to load {len(EXTENSIONS)} extensions:")
+    for extension in EXTENSIONS:
+        bot.load_extension(extension)
 
-    # launch bot
     bot.run(TOKEN)
