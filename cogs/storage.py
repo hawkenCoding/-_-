@@ -47,8 +47,9 @@ class Storage(Cog):
         try:
             message: Message = self._storage[key][0]
             text = self._storage[key][1]
+            user = message.author
             embed = Embed(
-                title=str(message.author),
+                title=f"{user.display_name} ({user})",
                 description=text,
             )
         except KeyError:
