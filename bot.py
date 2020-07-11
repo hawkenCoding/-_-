@@ -5,8 +5,9 @@ import os
 from dotenv import load_dotenv
 import logging
 
-import discord
+from discord import Embed, Status
 from discord.ext import commands
+from discord.ext.commands import Cog, Context
 
 from types import ModuleType
 
@@ -14,6 +15,7 @@ from types import ModuleType
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 PREFIX = os.getenv('COMMAND_PREFIX') + ' '
+DEBUG_CHANNEL_ID = int(os.getenv('DEBUG_CHANNEL_ID'))
 
 logging.basicConfig(level=logging.INFO)
 
@@ -22,26 +24,44 @@ class Bot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def add_cog(self, cog: commands.Cog) -> None:
+    async def on_connect(self):
+        logging.info('Connected to Discord.')
+
+    async def on_ready(self):
+        logging.info(f'Logged in as {bot.user}.')
+
+    def add_cog(self, cog: Cog) -> None:
         super().add_cog(cog)
         logging.info(f"Added cog: {cog.qualified_name}")
+
+    async def on_command_error(self, ctx: Context, exception):
+        # send help to the user
+        if ctx.command is not None:
+            await ctx.send_help(ctx.command)
+
+        # report the error to the debug channel
+        debug_channel = ctx.guild.get_channel(DEBUG_CHANNEL_ID)
+
+        if debug_channel is not None:
+            user = ctx.author
+
+            description = f"""Command: `{ctx.message.content}`
+                User: {user.name}#{user.discriminator} ({user.display_name})
+                Exception: `{exception}`
+            """
+
+            embed = Embed(
+                title=f"Error: `{ctx.message.content}`",
+                description=description,
+            )
+
+            await debug_channel.send(embed=embed)
 
 
 bot = Bot(
     PREFIX,
-    status=discord.Status.online,
+    status=Status.online,
 )
-
-
-@bot.event
-async def on_connect():
-    logging.info('Connected to Discord.')
-
-
-@bot.event
-async def on_ready():
-    logging.info(f'Logged in as {bot.user}.')
-
 
 if __name__ == '__main__':
     EXTENSIONS = [
@@ -49,6 +69,7 @@ if __name__ == '__main__':
         'cogs.roulette',
         'cogs.storage',
     ]
+
     logging.info(f"Attempting to load {len(EXTENSIONS)} extensions:")
     for extension in EXTENSIONS:
         bot.load_extension(extension)
