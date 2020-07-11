@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from discord.ext import commands
-
-_text = ''
-_author = ''
+from discord import Embed, Message
+from discord.ext.commands import command, Cog, Context
 
 
-class Storage(commands.Cog):
+class Storage(Cog):
     """
     Stores and retrieves an arbitrary string.
     Also stores and retrieves author to prevent abuse.
@@ -14,18 +12,52 @@ class Storage(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self._storage = {}
 
-    @commands.command()
-    async def store(self, ctx, *, text):
-        global _text, _author
-        _text = text
-        _author = ctx.author.name
-        await ctx.send("Got it.")
+    @command()
+    async def store(self, ctx: Context, *, text):
+        """Stores a piece of text and returns a secret key for later access"""
+        key = abs(hash(text))
+        if key in self._storage:
+            # hash collision
+            embed = Embed(
+                title="Error",
+                description="An error occurred. "
+                            "Maybe you have already stored this text. "
+                            "Please try again. ",
+            )
+        else:
+            self._storage[key] = (ctx.message, text)
+            embed = Embed(
+                title=key,
+                description="Your text has been stored in my memory.\n"
+                            "This storage is ephemeral, meaning that "
+                            "it will be lost whenever the bot restarts.\n"
+                            "Any text you store is potentially visible "
+                            "to anyone in the entire server.\n"
+                            "Please copy down the secret key shown above. "
+                            "You will need it to retrieve your text. ",
+            )
+        await ctx.send(embed=embed)
 
-    @commands.command()
-    async def retrieve(self, ctx):
-        await ctx.send(_author + ":")
-        await ctx.send(_text)
+    @command()
+    async def retrieve(self, ctx, key):
+        """Retrieves a stored piece of text given its secret key"""
+        key = int(key)
+        try:
+            message: Message = self._storage[key][0]
+            text = self._storage[key][1]
+            embed = Embed(
+                title=str(message.author),
+                description=text,
+            )
+        except KeyError:
+            embed = Embed(
+                title="Error",
+                description="No text with the given secret key was stored. "
+                            "Please try again. ",
+            )
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
