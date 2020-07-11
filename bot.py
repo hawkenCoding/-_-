@@ -66,8 +66,9 @@ bot = Bot(
 if __name__ == '__main__':
     EXTENSIONS = [
         'cogs.admin',
-        'cogs.roulette',
         'cogs.storage',
+        'cogs.roulette',
+        'cogs.marketing',
     ]
 
     logging.info(f"Attempting to load {len(EXTENSIONS)} extensions:")
