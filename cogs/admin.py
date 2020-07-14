@@ -50,7 +50,7 @@ class Admin(Cog):
             title=f"Channel: {channel}",
             description=f"Category: {channel.category}\n"
                         f"Created at: {channel.created_at} UTC\n"
-                        f"Changed roles: {channel.changed_roles}\n"
+                        f"Changed roles: {[role.name for role in channel.changed_roles]}\n"
                         f"Permissions synced: {channel.permissions_synced}\n",
         ))
 
