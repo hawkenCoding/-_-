@@ -7,9 +7,7 @@ import logging
 
 from discord import Embed, Status
 from discord.ext import commands
-from discord.ext.commands import Cog, Context
-
-from types import ModuleType
+from discord.ext.commands import Cog, Context, CommandError
 
 # get token as environment variable
 load_dotenv()
@@ -34,10 +32,16 @@ class Bot(commands.Bot):
         super().add_cog(cog)
         logging.info(f"Added cog: {cog.qualified_name}")
 
-    async def on_command_error(self, ctx: Context, exception):
+    async def on_command_error(self, ctx: Context, exception: CommandError):
         # send help to the user
-        if ctx.command is not None:
-            await ctx.send_help(ctx.command)
+        await ctx.send(embed=Embed(
+            title=f"A wild `{type(exception).__name__}` appeared! Programmer, I choose you!",
+            description=f"You've triggered a(n) `{type(exception).__name__}` error: `{exception}`.\n"
+                        f"Please review your command and try again. If you do not know how to use this "
+                        f"command, enter `-_- help <command>`, where `<command>` is the command name.\n"
+                        f"If you think this is a bug, contact the developers in the bot suggestions "
+                        f"channel or file an issue on our GitHub (`-_- source`)."
+        ))
 
         # report the error to the debug channel
         debug_channel = ctx.guild.get_channel(DEBUG_CHANNEL_ID)
@@ -47,6 +51,7 @@ class Bot(commands.Bot):
 
             description = f"""Command: `{ctx.message.content}`
                 User: {user.name}#{user.discriminator} ({user.display_name})
+                Type: `{type(exception).__name__}`
                 Exception: `{exception}`
             """
 
