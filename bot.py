@@ -48,19 +48,16 @@ class Bot(commands.Bot):
 
         if debug_channel is not None:
             user = ctx.author
-
-            description = f"""Command: `{ctx.message.content}`
-                User: {user.name}#{user.discriminator} ({user.display_name})
+            description = f"""Bot: `{self.user}`
+                Command: `{ctx.message.content}`
+                User: `{user}` (`{user.display_name}`)
                 Type: `{type(exception).__name__}`
                 Exception: `{exception}`
             """
-
-            embed = Embed(
+            await debug_channel.send(embed=Embed(
                 title=f"Error: `{ctx.message.content}`",
                 description=description,
-            )
-
-            await debug_channel.send(embed=embed)
+            ))
 
 
 bot = Bot(
