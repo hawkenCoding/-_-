@@ -1,4 +1,4 @@
-from discord import Embed, Member, TextChannel
+from discord import Embed, Member, TextChannel, Role
 from discord.ext.commands import command, Cog, Bot, Context
 
 import time
@@ -6,9 +6,22 @@ import time
 
 class Admin(Cog):
     """Administrative and utility functions."""
+
     def __init__(self, bot: Bot):
         self.bot = bot
         self.start_time = time.time()
+
+    @property
+    def latency(self):
+        """Returns the latency in milliseconds"""
+        return round(1000 * self.bot.latency, 3)
+
+    @command()
+    async def ping(self, ctx: Context):
+        await ctx.send(embed=Embed(
+            title="Pong!",
+            description=f"Latency: {self.latency} ms",
+        ))
 
     @command()
     async def stats(self, ctx: Context):
@@ -17,7 +30,7 @@ class Admin(Cog):
         result = Embed(
             title="-_- Bot Stats",
             description=f"Up time: {round(time_delta, 3)} s\n"
-                        f"Latency: {round(1000 * self.bot.latency, 3)} ms"
+                        f"Latency: {self.latency} ms"
         )
         await ctx.send(embed=result)
 
@@ -42,12 +55,24 @@ class Admin(Cog):
             ))
 
     @command()
+    async def role(self, ctx: Context, role: Role):
+        await ctx.send(embed=Embed(
+            title=f"Role: @{role.name}",
+            description=f"ID: {role.id}\n"
+                        f"Separate: {role.hoist}\n"
+                        f"Managed: {role.managed}\n"
+                        f"Mentionable: {role.mentionable}\n"
+                        f"Created at: {role.created_at} UTC\n"
+                        f"Members: {len(role.members)}\n",
+        ))
+
+    @command()
     async def channel(self, ctx: Context, channel: TextChannel = None):
         # TODO: make it work for more than just TextChannel
         if channel is None:
             channel = ctx.channel
         await ctx.send(embed=Embed(
-            title=f"Channel: {channel}",
+            title=f"Channel: #{channel}",
             description=f"Category: {channel.category}\n"
                         f"Created at: {channel.created_at} UTC\n"
                         f"Changed roles: {[role.name for role in channel.changed_roles]}\n"
@@ -55,14 +80,20 @@ class Admin(Cog):
         ))
 
     @command()
-    async def member(self, ctx: Context, member: Member):
+    async def member(self, ctx: Context, member: Member = None):
+        if member is None:
+            member = ctx.author
         await ctx.send(embed=Embed(
-            title=f"Member: {member} ({member.display_name})",
+            title=f"Member: {member} (@{member.display_name})",
             description=f"ID: {member.id}\n"
+                        f"Status: {member.status}\n"
+                        f"Activity: {member.activity}\n"
+                        f"Top role: {member.top_role}\n"
+                        f"Voice state: {member.voice}\n"
                         f"Created at: {member.created_at} UTC\n"
                         f"Joined at: {member.joined_at} UTC\n"
                         f"Bot account: {member.bot}\n"
-                        f"System account: {member.system}\n"
+                        f"System account: {member.system}\n",
         ))
 
 
