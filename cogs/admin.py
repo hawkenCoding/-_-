@@ -57,7 +57,7 @@ class Admin(Cog):
                         f"Permissions synced: {channel.permissions_synced}\n",
         ))
 
-    @command()
+    @command(aliases=['user'])
     async def member(self, ctx: Context, member: Member = None):
         """Information about yourself or any other server member."""
         if member is None:
