@@ -69,8 +69,9 @@ if __name__ == '__main__':
     EXTENSIONS = [
         'cogs.admin',
         'cogs.storage',
-        'cogs.roulette',
         'cogs.marketing',
+        'cogs.quote',
+        'cogs.roulette',
     ]
 
     logging.info(f"Attempting to load {len(EXTENSIONS)} extensions:")
