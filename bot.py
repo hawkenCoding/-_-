@@ -68,6 +68,7 @@ bot = Bot(
 if __name__ == '__main__':
     EXTENSIONS = [
         'cogs.admin',
+        'cogs.develop',
         'cogs.storage',
         'cogs.marketing',
         'cogs.quote',
