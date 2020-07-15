@@ -73,6 +73,7 @@ if __name__ == '__main__':
         'cogs.marketing',
         'cogs.quote',
         'cogs.roulette',
+        'cogs.gabe_why'
     ]
 
     logging.info(f"Attempting to load {len(EXTENSIONS)} extensions:")
