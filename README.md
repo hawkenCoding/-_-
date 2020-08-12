@@ -1,6 +1,6 @@
 # `-_-`
 
-A Discord bot made using discord.py. Made for educational purposes. A collaborative effort open to everyone, especially members of the Hawken Coding Club, that was started by [21taoray](https://github.com/21taoray).
+A Discord bot made using discord.py. Made for educational purposes. A collaborative effort open to everyone, especially members of the Hawken Coding Club, that was started by [21taoray](https://github.com/rtao258).
 
 ### Name
 
