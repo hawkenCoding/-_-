@@ -1,21 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os
-from dotenv import load_dotenv
 import logging
 
-from discord import Embed, Status
+from discord import Embed
 from discord.ext import commands
 from discord.ext.commands import Cog, Context, CommandError
 
-# get token as environment variable
-load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-PREFIX = os.getenv('COMMAND_PREFIX') + ' '
-DEBUG_CHANNEL_ID = int(os.getenv('DEBUG_CHANNEL_ID'))
+from dashunderscoredash import constants
 
-logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class Bot(commands.Bot):
@@ -23,14 +17,14 @@ class Bot(commands.Bot):
         super().__init__(*args, **kwargs)
 
     async def on_connect(self):
-        logging.info('Connected to Discord.')
+        logger.info('Connected to Discord.')
 
     async def on_ready(self):
-        logging.info(f'Logged in as {bot.user}.')
+        logger.info(f'Logged in as {self.user}.')
 
     def add_cog(self, cog: Cog) -> None:
         super().add_cog(cog)
-        logging.info(f"Added cog: {cog.qualified_name}")
+        logger.info(f"Added cog: {cog.qualified_name}")
 
     async def on_command_error(self, ctx: Context, exception: CommandError):
         # send help to the user
@@ -44,7 +38,7 @@ class Bot(commands.Bot):
         ))
 
         # report the error to the debug channel
-        debug_channel = ctx.guild.get_channel(DEBUG_CHANNEL_ID)
+        debug_channel = ctx.guild.get_channel(constants.DEBUG_CHANNEL_ID)
 
         if debug_channel is not None:
             user = ctx.author
@@ -58,26 +52,3 @@ class Bot(commands.Bot):
                 title=f"Error: `{ctx.message.content}`",
                 description=description,
             ))
-
-
-bot = Bot(
-    PREFIX,
-    status=Status.online,
-)
-
-if __name__ == '__main__':
-    EXTENSIONS = [
-        'cogs.admin',
-        'cogs.develop',
-        'cogs.storage',
-        'cogs.marketing',
-        'cogs.quote',
-        'cogs.roulette',
-        'cogs.gabe_why'
-    ]
-
-    logging.info(f"Attempting to load {len(EXTENSIONS)} extensions:")
-    for extension in EXTENSIONS:
-        bot.load_extension(extension)
-
-    bot.run(TOKEN)
