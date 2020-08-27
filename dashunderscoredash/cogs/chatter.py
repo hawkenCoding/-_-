@@ -55,7 +55,6 @@ class Chatter(Cog):
         self.chat.start()
         import asyncio
         await asyncio.sleep(2)
-        logger.critical('SPANISH INQUISITION')
 
     @tasks.loop(hours=2.0)
     async def chat(self):
