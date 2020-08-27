@@ -1,5 +1,5 @@
 """
-Constants loaded from a dotenv file or Heroku config vars
+Constants loaded from a dotenv file or Heroku config vars or elsewhere
 """
 
 import os
@@ -10,4 +10,5 @@ dotenv.load_dotenv()
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 PREFIX = os.getenv('COMMAND_PREFIX') + ' '
-DEBUG_CHANNEL_ID = int(os.getenv('DEBUG_CHANNEL_ID'))
+
+DEBUG_MODE = False

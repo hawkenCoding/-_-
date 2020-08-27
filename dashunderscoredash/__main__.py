@@ -2,29 +2,20 @@ import logging
 
 from discord import Status
 
-from dashunderscoredash import bot, constants
+from dashunderscoredash import constants
+from dashunderscoredash.bot import Bot
 
 logging.basicConfig(level=logging.INFO)
 
-logger = logging.getLogger(__name__)
+bot = Bot(constants.PREFIX, status=Status.online,)
 
-bot = bot.Bot(
-    constants.PREFIX,
-    status=Status.online,
-)
-
-EXTENSIONS = [
-    'cogs.admin',
-    'cogs.develop',
-    'cogs.storage',
-    'cogs.marketing',
-    'cogs.quote',
-    'cogs.roulette',
-    'cogs.gabe_why'
-]
-
-logger.info(f"Attempting to load {len(EXTENSIONS)} extensions:")
-for extension in EXTENSIONS:
-    bot.load_extension(extension)
+bot.load_extension('dashunderscoredash.cogs.admin')
+bot.load_extension('dashunderscoredash.cogs.chatter')
+bot.load_extension('dashunderscoredash.cogs.develop')
+bot.load_extension('dashunderscoredash.cogs.gabe_why')
+bot.load_extension('dashunderscoredash.cogs.marketing')
+bot.load_extension('dashunderscoredash.cogs.quoter')
+bot.load_extension('dashunderscoredash.cogs.roulette')
+bot.load_extension('dashunderscoredash.cogs.storage')
 
 bot.run(constants.TOKEN)

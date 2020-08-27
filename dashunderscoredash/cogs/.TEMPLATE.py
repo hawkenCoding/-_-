@@ -2,7 +2,7 @@
 
 from discord.ext.commands import command, Cog, Context
 
-from bot import Bot
+from dashunderscoredash.bot import Bot
 
 
 class TEMPLATE(Cog):

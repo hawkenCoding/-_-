@@ -7,9 +7,9 @@ from discord import Embed
 from discord.ext import commands
 from discord.ext.commands import Cog, Context, CommandError
 
-from dashunderscoredash import constants
+from dashunderscoredash.handler import DiscordHandler
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('dashunderscoredash')
 
 DEBUG_CHANNEL_ID = 731332649137995847
 
@@ -19,10 +19,14 @@ class Bot(commands.Bot):
         super().__init__(*args, **kwargs)
 
     async def on_connect(self):
-        logger.info('Connected to Discord.')
+        logger.info('Connected to Discord')
 
     async def on_ready(self):
-        logger.info(f'Logged in as {self.user}.')
+        logger.info(f'Logged in as {self.user}')
+
+        # register Discord logging handler
+        debug_channel_handler = DiscordHandler(self, self.get_channel(DEBUG_CHANNEL_ID))
+        logger.addHandler(debug_channel_handler)
 
     def add_cog(self, cog: Cog) -> None:
         super().add_cog(cog)
@@ -40,7 +44,7 @@ class Bot(commands.Bot):
         ))
 
         # report the error to the debug channel
-        debug_channel = ctx.guild.get_channel(constants.DEBUG_CHANNEL_ID)
+        debug_channel = ctx.guild.get_channel(DEBUG_CHANNEL_ID)
 
         if debug_channel is not None:
             user = ctx.author
