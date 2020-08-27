@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
 from discord import Embed, Message
 from discord.ext.commands import command, Cog, Context
+
+logger = logging.getLogger(__name__)
 
 
 class Storage(Cog):
@@ -44,20 +48,17 @@ class Storage(Cog):
     async def retrieve(self, ctx, key):
         """Retrieves a stored piece of text given its secret key"""
         key = int(key)
+        embed = Embed()
         try:
             message: Message = self._storage[key][0]
             text = self._storage[key][1]
-            user = message.author
-            embed = Embed(
-                title=f"{user.display_name} ({user})",
-                description=text,
-            )
+
+            embed.set_author(name=message.author, icon_url=message.author.avatar_url)
+            embed.description = text
         except KeyError:
-            embed = Embed(
-                title="Error",
-                description="No text with the given secret key was stored. "
-                            "Please try again. ",
-            )
+            embed.title = "Error"
+            embed.description = "No text with the given secret key was stored. Please try again."
+            logger.warn("Request hash not found in storage (may be user error)")
         await ctx.send(embed=embed)
 
 
