@@ -5,11 +5,7 @@ from discord.ext.commands import command, Cog, Context, CommandError
 
 from random import choice
 
-from os import getenv
-from dotenv import load_dotenv
-
-load_dotenv()
-QUOTE_CHANNEL_ID = int(getenv('QUOTE_CHANNEL_ID'))
+QUOTE_CHANNEL_ID = 732792588507152395
 
 
 class Quote(Cog):

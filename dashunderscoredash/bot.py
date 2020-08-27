@@ -11,6 +11,8 @@ from dashunderscoredash import constants
 
 logger = logging.getLogger(__name__)
 
+DEBUG_CHANNEL_ID = 731332649137995847
+
 
 class Bot(commands.Bot):
     def __init__(self, *args, **kwargs):
