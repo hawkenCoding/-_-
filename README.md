@@ -18,3 +18,7 @@ The bot will be hosted off of Heroku - if you have an idea for a better platform
 ## Working on the Bot
 
 Thanks for your interest in making the bot better. To get started, please see the [CONTRIBUTING.md](contributing.md) file.
+
+## Acknowledgements
+
+Heavy inspiration and minor code reuse from [the Python Discord Server bot](https://github.com/python-discord/bot/). See [the license](LICENSE).
