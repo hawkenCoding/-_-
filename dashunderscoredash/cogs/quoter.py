@@ -63,7 +63,7 @@ class Quoter(Cog):
         """Sends one randomly-selected quote from the #quote-board"""
         channel = ctx.guild.get_channel(QUOTE_CHANNEL_ID)
         message = await ctx.send(f"Getting quote from {channel.mention}...")
-        quote: Quote = await self.get_quote(ctx, member)
+        quote: Quote = await self.get_quote(member)
 
         if quote is None:
             if member is None:
