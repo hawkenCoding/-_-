@@ -56,7 +56,7 @@ class Chatter(Cog):
         import asyncio
         await asyncio.sleep(2)
 
-    @tasks.loop(hours=2.0)
+    @tasks.loop(hours=24.0)
     async def chat(self):
         await self.channel.send(random.choice(MESSAGES))
 
