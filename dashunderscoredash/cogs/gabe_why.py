@@ -7,6 +7,7 @@ import random
 
 TARGET_USER_IDS = [
     432180657796546590,  # Gabe
+    761034498686713936, # Divij S
 ]
 
 WHY_EMOJIS = [
