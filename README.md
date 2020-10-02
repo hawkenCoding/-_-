@@ -22,3 +22,4 @@ Thanks for your interest in making the bot better. To get started, please see th
 ## Acknowledgements
 
 Heavy inspiration and minor code reuse from [the Python Discord Server bot](https://github.com/python-discord/bot/). See [the license](LICENSE).
+Poll function adapted from [Vexs](https://github.com/Vexs) from their [QuickPoll](https://gist.github.com/Vexs/f2c1bfd6bda68a661a71accd300d2adc) gist.
